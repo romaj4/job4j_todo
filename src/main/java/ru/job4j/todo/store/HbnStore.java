@@ -8,6 +8,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class HbnStore implements Store {
 
@@ -27,13 +28,18 @@ public class HbnStore implements Store {
         return HbnStore.Lazy.INST;
     }
 
-    @Override
-    public Item add(Item item) {
-        Session session = this.sf.openSession();
+    private <T> T apply(final Function<Session, T> command) {
+        final Session session = this.sf.openSession();
         session.beginTransaction();
-        session.save(item);
+        T rsl = command.apply(session);
         session.getTransaction().commit();
         session.close();
+        return rsl;
+    }
+
+    @Override
+    public Item add(Item item) {
+        this.apply(session -> session.save(item));
         return item;
     }
 
@@ -41,12 +47,10 @@ public class HbnStore implements Store {
     public boolean replace(Integer id, Item item) {
         boolean rst = this.findById(id) != null;
         if (rst) {
-            item.setId(id);
-            Session session = this.sf.openSession();
-            session.beginTransaction();
-            session.update(item);
-            session.getTransaction().commit();
-            session.close();
+            this.apply(session -> {
+                session.update(item);
+                return null;
+            });
         }
         return rst;
     }
@@ -56,11 +60,10 @@ public class HbnStore implements Store {
         boolean rst = false;
         Item item = this.findById(id);
         if (item != null) {
-            Session session = this.sf.openSession();
-            session.beginTransaction();
-            session.delete(item);
-            session.getTransaction().commit();
-            session.close();
+            this.apply(session -> {
+                session.delete(item);
+                return null;
+            });
             rst = true;
         }
         return rst;
@@ -68,22 +71,12 @@ public class HbnStore implements Store {
 
     @Override
     public List<Item> findAll() {
-        Session session = this.sf.openSession();
-        session.beginTransaction();
-        List result = session.createQuery("from ru.job4j.todo.model.Item order by id").list();
-        session.getTransaction().commit();
-        session.close();
-        return result;
+        return this.apply(session -> session.createQuery("from ru.job4j.todo.model.Item order by id").list());
     }
 
     @Override
     public Item findById(Integer id) {
-        Session session = this.sf.openSession();
-        session.beginTransaction();
-        Item result = session.get(Item.class, id);
-        session.getTransaction().commit();
-        session.close();
-        return result;
+        return this.apply(session -> session.get(Item.class, id));
     }
 
     @Override
