@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import ru.job4j.todo.model.User;
 
 import java.util.List;
 import java.util.function.Function;
@@ -77,6 +78,17 @@ public class HbnStore implements Store {
     @Override
     public Item findById(Integer id) {
         return this.apply(session -> session.get(Item.class, id));
+    }
+
+    @Override
+    public User addUser(User user) {
+        this.apply(session -> session.save(user));
+        return user;
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        return this.apply(session -> session.byNaturalId(User.class).using("email", email).load());
     }
 
     @Override

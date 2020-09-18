@@ -1,6 +1,7 @@
 package ru.job4j.todo.servlets;
 
 import ru.job4j.todo.model.Item;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.store.HbnStore;
 
 import javax.servlet.ServletException;
@@ -16,6 +17,10 @@ public class AddItemServlet extends HttpServlet {
         resp.setContentType("text/plain");
         resp.setCharacterEncoding("UTF-8");
         String desc = req.getParameter("desc");
-        HbnStore.instOf().add(new Item(desc));
+        User user = (User) req.getSession().getAttribute("user");
+        if (user != null) {
+            Item item = new Item(desc, user);
+            HbnStore.instOf().add(item);
+        }
     }
 }

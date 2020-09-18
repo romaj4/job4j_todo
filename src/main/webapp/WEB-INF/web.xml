@@ -1,41 +1,57 @@
 <!DOCTYPE web-app PUBLIC
- "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
- "http://java.sun.com/dtd/web-app_2_3.dtd" >
+        "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
          http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
-  <display-name>Archetype Created Web Application</display-name>
+    <display-name>Archetype Created Web Application</display-name>
 
-  <servlet>
-    <servlet-name>AddItem</servlet-name>
-    <servlet-class>ru.job4j.todo.servlets.AddItemServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>AddItem</servlet-name>
-    <url-pattern>/additem</url-pattern>
-  </servlet-mapping>
+    <servlet>
+        <servlet-name>AddItem</servlet-name>
+        <servlet-class>ru.job4j.todo.servlets.AddItemServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddItem</servlet-name>
+        <url-pattern>/additem</url-pattern>
+    </servlet-mapping>
 
-  <servlet>
-    <servlet-name>items</servlet-name>
-    <servlet-class>ru.job4j.todo.servlets.ItemsServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>items</servlet-name>
-    <url-pattern>/items</url-pattern>
-  </servlet-mapping>
+    <servlet>
+        <servlet-name>items</servlet-name>
+        <servlet-class>ru.job4j.todo.servlets.ItemsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>items</servlet-name>
+        <url-pattern>/items</url-pattern>
+    </servlet-mapping>
 
-  <servlet>
-    <servlet-name>donetask</servlet-name>
-    <servlet-class>ru.job4j.todo.servlets.DoneTaskServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>donetask</servlet-name>
-    <url-pattern>/donetask</url-pattern>
-  </servlet-mapping>
+    <servlet>
+        <servlet-name>donetask</servlet-name>
+        <servlet-class>ru.job4j.todo.servlets.DoneTaskServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>donetask</servlet-name>
+        <url-pattern>/donetask</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>AuthServlet</servlet-name>
+        <servlet-class>ru.job4j.todo.servlets.AuthServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AuthServlet</servlet-name>
+        <url-pattern>/auth</url-pattern>
+    </servlet-mapping>
 
+    <servlet>
+        <servlet-name>RegServlet</servlet-name>
+        <servlet-class>ru.job4j.todo.servlets.RegServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RegServlet</servlet-name>
+        <url-pattern>/reg</url-pattern>
+    </servlet-mapping>
 </web-app>
 
 

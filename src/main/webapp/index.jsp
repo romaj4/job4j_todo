@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +18,8 @@
                                 $("<td class=\"id\">").text(item.id),
                                 $("<td>").text(item.description),
                                 $("<td>").text(item.created),
-                                $("<td>").html("<input type=\"checkbox\">")))
+                                $("<td>").html("<input type=\"checkbox\">"),
+                                $('<td>').text(item.user.name)))
             })
         }
 
@@ -29,7 +31,8 @@
                             $("<td class=\"id\">").text(item.id),
                             $("<td>").text(item.description),
                             $("<td>").text(item.created),
-                            item.done === true ? $("<td>").html("<input type=\"checkbox\" checked>") : $("<td>").html("<input type=\"checkbox\">")))
+                            item.done === true ? $("<td>").html("<input type=\"checkbox\" checked>") : $("<td>").html("<input type=\"checkbox\">"),
+                            $('<td>').text(item.user.name)))
             })
         }
 
@@ -99,6 +102,22 @@
     window.onload = loadTaskTable();
 </script>
 <div class="container">
+    <div class="row">
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" href='<%=request.getContextPath()%>/reg.jsp'>Регистрация</a>
+            </li>
+            <%if (session.getAttribute("user") == null) {%>
+            <li class="nav-item">
+                <a class="nav-link" href='<%=request.getContextPath()%>/login.jsp'>Войти</a>
+            </li>
+            <% } else {%>
+            <li class="nav-item">
+                <a class="nav-link" href="<%=request.getContextPath()%>/auth?log=0">${user.name} | Выйти</a>
+            </li>
+            <%}%>
+        </ul>
+    </div>
     <form id="myForm" onsubmit="return false;">
         <fieldset class="mt-3">
             <div class="form-group">
@@ -120,10 +139,11 @@
             <table class="table table-bordered" id="itemTable">
                 <thead>
                 <tr>
-                    <th width="10%">Id</th>
-                    <th width="50%">Задание</th>
+                    <th width="5%">Id</th>
+                    <th width="40%">Задание</th>
                     <th width="30%">Дата создания</th>
-                    <th width="100%">Статус</th>
+                    <th width="10%">Статус</th>
+                    <th width="15%">Автор</th>
                 </tr>
                 </thead>
                 <tbody id="tbody"></tbody>
