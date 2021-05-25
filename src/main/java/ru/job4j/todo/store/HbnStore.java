@@ -1,5 +1,6 @@
 package ru.job4j.todo.store;
 
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Item;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -39,8 +40,14 @@ public class HbnStore implements Store {
     }
 
     @Override
-    public Item add(Item item) {
-        this.apply(session -> session.save(item));
+    public Item add(Item item, String[] ids) {
+        this.apply(session -> {
+            for (String id : ids) {
+                Category category = session.find(Category.class, Integer.parseInt(id));
+                item.addCategory(category);
+            }
+            return session.save(item);
+        });
         return item;
     }
 
@@ -89,6 +96,11 @@ public class HbnStore implements Store {
     @Override
     public User findUserByEmail(String email) {
         return this.apply(session -> session.byNaturalId(User.class).using("email", email).load());
+    }
+
+    @Override
+    public List<Category> allCategories() {
+        return this.apply(session -> session.createQuery("select c from Category c", Category.class).list());
     }
 
     @Override

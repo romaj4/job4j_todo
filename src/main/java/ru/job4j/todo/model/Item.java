@@ -4,6 +4,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -24,12 +26,19 @@ public class Item {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.EAGER)
+    private List<Category> categories = new ArrayList<>();
+
     public Item() {
     }
 
     public Item(String desc, User user) {
         this.description = desc;
         this.user = user;
+    }
+
+    public void addCategory(Category category) {
+        this.categories.add(category);
     }
 
     public int getId() {

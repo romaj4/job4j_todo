@@ -17,10 +17,11 @@ public class AddItemServlet extends HttpServlet {
         resp.setContentType("text/plain");
         resp.setCharacterEncoding("UTF-8");
         String desc = req.getParameter("desc");
+        String[] cIds = req.getParameter("cIds").split(",");
         User user = (User) req.getSession().getAttribute("user");
         if (user != null) {
             Item item = new Item(desc, user);
-            HbnStore.instOf().add(item);
+            HbnStore.instOf().add(item, cIds);
         }
     }
 }

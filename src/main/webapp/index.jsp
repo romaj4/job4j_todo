@@ -19,7 +19,8 @@
                                 $("<td>").text(item.description),
                                 $("<td>").text(item.created),
                                 $("<td>").html("<input type=\"checkbox\">"),
-                                $('<td>').text(item.user.name)))
+                                $('<td>').text(item.user.name),
+                                $('<td>').text(parseCategories(item.categories))))
             })
         }
 
@@ -32,8 +33,18 @@
                             $("<td>").text(item.description),
                             $("<td>").text(item.created),
                             item.done === true ? $("<td>").html("<input type=\"checkbox\" checked>") : $("<td>").html("<input type=\"checkbox\">"),
-                            $('<td>').text(item.user.name)))
+                            $('<td>').text(item.user.name),
+                            $('<td>').text(parseCategories(item.categories))))
             })
+        }
+
+        function parseCategories(data) {
+            let arr = [];
+            let i = 0;
+            data.forEach(categories => {
+                arr[i++] = categories.name
+            })
+            return arr.join(", ");
         }
 
         function addItem() {
@@ -41,7 +52,10 @@
             $.ajax({
                 type: 'GET',
                 url: 'http://localhost:8080/todo/additem',
-                data: 'desc=' + $('#desc').val(),
+                data: {
+                    desc: $('#desc').val(),
+                    cIds: $('#cIds').val().toString()
+                },
                 dataType: 'text'
             }).done(function () {
                 $(".addRow").remove();
@@ -89,18 +103,35 @@
             }
         });
 
-        $(document).ready(function () {
+        function showTasks() {
             $("#showAllTasks").click(function () {
                 $(".addRow").remove();
                 $(this).is(":checked") ? loadDoneTaskTable() : loadTaskTable();
             });
+        }
+
+        function showCategory() {
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:8080/todo/categories',
+                dataType: 'json'
+            }).done(function (data) {
+                console.log(data)
+                data.forEach(category => {
+                    $("#cIds").append($("<option />").val(category.id).text(category.name))
+                })
+                $("#cIds :first").attr('selected', 'true');
+            });
+        }
+
+        $(document).ready(function () {
+            loadTaskTable();
+            showCategory();
+            showTasks();
         });
     </script>
 </head>
 <body>
-<script>
-    window.onload = loadTaskTable();
-</script>
 <div class="container">
     <div class="row">
         <ul class="nav">
@@ -125,6 +156,11 @@
                 <label for="desc">Описание</label>
                 <input type="desc" class="form-control" id="desc" placeholder="Введите описание задачи" name="desc"
                        autocomplete="off">
+                <br>
+                <label for="cIds">Категория задания</label>
+                <select class="form-control" name="cIds" id="cIds" multiple required>
+
+                </select>
             </div>
             <button type="reset" class="btn btn-primary" id="addButton" onclick="addItem()">Добавить</button>
         </fieldset>
@@ -140,10 +176,11 @@
                 <thead>
                 <tr>
                     <th width="5%">Id</th>
-                    <th width="40%">Задание</th>
-                    <th width="30%">Дата создания</th>
+                    <th width="30%">Задание</th>
+                    <th width="20%">Дата создания</th>
                     <th width="10%">Статус</th>
                     <th width="15%">Автор</th>
+                    <th width="20%">Категории</th>
                 </tr>
                 </thead>
                 <tbody id="tbody"></tbody>
