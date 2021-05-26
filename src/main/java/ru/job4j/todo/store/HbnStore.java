@@ -79,7 +79,8 @@ public class HbnStore implements Store {
 
     @Override
     public List<Item> findAll() {
-        return this.apply(session -> session.createQuery("from ru.job4j.todo.model.Item order by id").list());
+        return this.apply(session -> session.createQuery(
+                "select distinct i from Item i join fetch i.categories order by i.id", Item.class).list());
     }
 
     @Override
