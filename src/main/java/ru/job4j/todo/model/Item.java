@@ -1,10 +1,9 @@
 package ru.job4j.todo.model;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,8 +16,8 @@ public class Item {
 
     private String description;
 
-    @CreationTimestamp
-    private Timestamp created;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
 
     private boolean done;
 
@@ -35,6 +34,7 @@ public class Item {
     public Item(String desc, User user) {
         this.description = desc;
         this.user = user;
+        this.created = new Date(System.currentTimeMillis());
     }
 
     public void addCategory(Category category) {
@@ -57,7 +57,7 @@ public class Item {
         this.description = description;
     }
 
-    public Timestamp getCreated() {
+    public Date getCreated() {
         return this.created;
     }
 
